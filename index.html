@@ -1,0 +1,80 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue</title>
+    <style>
+        .active {
+            color: #F00;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" placeholder="TODO" v-model="input"> <button @click="addElement">Create</button>
+        <h3 v-if="elements.length">TODO LIST({{elements.length}})</h3>
+        <ul>
+            <li v-for="(element, index) in elements">
+                <div v-if="!element.edit">
+                    {{element.value}}
+                    <button @click="deleteElement(index)">x</button>
+                    <button @click="triggerEdit(index)">edit</button>
+                </div>
+                <div v-else><input type="text" v-model="element.value"> <button
+                        @click="submitEdit(index)">submit</button></div>
+            </li>
+    </div>
+    </li>
+    </ul>
+    </div>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js'></script>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data() {
+                return {
+                    input: '',
+                    mode: 'create',
+                    elements: [
+
+                    ],
+
+                }
+            },
+            methods: {
+                addElement() {
+                    this.elements.push({
+                        value: this.input,
+                        edit: false
+                    })
+                    this.input = ""
+                    this.store()
+                },
+                deleteElement(index) {
+                    this.elements.splice(index, 1)
+                    this.store()
+                },
+                triggerEdit(index) {
+                    this.elements[index].edit = true
+                },
+                submitEdit(index) {
+                    this.elements[index].edit = false
+                    this.store()
+                },
+                store() {
+                    localStorage.setItem('elements', JSON.stringify(this.elements))
+                }
+            },
+            created() {
+                if (localStorage.getItem('elements')) {
+                    this.elements = JSON.parse(localStorage.getItem('elements'))
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
